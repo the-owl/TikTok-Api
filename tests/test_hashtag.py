@@ -21,7 +21,7 @@ def test_hashtag_info():
 
 
 def test_non_latin1():
-    name = "селфи"
+    name = "селфі"
     tag = api.hashtag(name=name)
     data = tag.info()
 

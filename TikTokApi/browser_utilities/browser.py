@@ -1,6 +1,3 @@
-import random
-import time
-import string
 import requests
 import logging
 import time
@@ -31,10 +28,7 @@ def get_playwright():
 
 
 class browser(BrowserInterface):
-    def __init__(
-        self,
-        **kwargs,
-    ):
+    def __init__(self, **kwargs):
         self.kwargs = kwargs
         self.debug = kwargs.get("debug", False)
         self.proxy = kwargs.get("proxy", None)
@@ -189,12 +183,6 @@ class browser(BrowserInterface):
                 wait_until="load",
             )
 
-        verifyFp = "".join(
-            random.choice(
-                string.ascii_lowercase + string.ascii_uppercase + string.digits
-            )
-            for i in range(16)
-        )
         if kwargs.get("gen_new_verifyFp", False):
             verifyFp = self.gen_verifyFp()
         else:
@@ -203,6 +191,10 @@ class browser(BrowserInterface):
                 "verify_khgp4f49_V12d4mRX_MdCO_4Wzt_Ar0k_z4RCQC9pUDpX",
             )
 
+        msToken = kwargs.get("ms_token", "zeKJo6iucFiMvbscBo_w-4NMbuljK2u22uf5AgTNdeY85HGODm"
+                                         "-QMx5J87Xhwd8bHSXMOZoKpufVijsEoiC21pzUuiM7PGo6cS0is"
+                                         "ipRE21d9ocsso03lVfTEv4xFYwOxwB8rkjcSEe-sfRKoA==")
+
         if kwargs.get("custom_device_id") is not None:
             device_id = kwargs.get("custom_device_id", None)
         elif self.device_id is None:
@@ -210,7 +202,7 @@ class browser(BrowserInterface):
         else:
             device_id = self.device_id
 
-        url = "{}&verifyFp={}&device_id={}".format(url, verifyFp, device_id)
+        url = "{}&verifyFp={}&device_id={}$msToken={}".format(url, verifyFp, device_id, msToken)
 
         page.add_script_tag(content=_get_acrawler())
         evaluatedPage = page.evaluate(
@@ -219,7 +211,7 @@ class browser(BrowserInterface):
             + url
             + """"
             var token = window.byted_acrawler.sign({url: url});
-            
+
             return token;
             }"""
         )
@@ -234,12 +226,12 @@ class browser(BrowserInterface):
                     return window.genXTTParams("""
                 + json.dumps(dict(parse_qsl(urlparse(url).query)))
                 + """);
-            
+
                 }"""
             )
 
         context.close()
-        return (verifyFp, device_id, evaluatedPage, tt_params)
+        return verifyFp, device_id, msToken, evaluatedPage, tt_params
 
     def _clean_up(self):
         try:
