@@ -111,7 +111,8 @@ class User:
 
         return user_props["userInfo"]
 
-    def videos(self, count=30, cursor=0, **kwargs) -> Iterator[Video]:
+    def videos(self, count: int = 30, cursor: int = 0, 
+               get_all: bool = False, **kwargs) -> Iterator[Video]:
         """
         Returns an iterator yielding Video objects.
 
@@ -135,7 +136,7 @@ class User:
         first = True
         amount_yielded = 0
 
-        while amount_yielded < count:
+        while get_all or amount_yielded < count:
             query = {
                 "count": count,
                 "id": self.user_id,
@@ -168,7 +169,8 @@ class User:
             cursor = res["cursor"]
             first = False
 
-    def liked(self, count: int = 30, cursor: int = 0, **kwargs) -> Iterator[Video]:
+    def liked(self, count: int = 30, cursor: int = 0, 
+              get_all: bool = False, **kwargs) -> Iterator[Video]:
         """
         Returns a dictionary listing TikToks that a given a user has liked.
 
@@ -193,7 +195,7 @@ class User:
         if self.user_id is None and self.sec_uid is None:
             self.__find_attributes()
 
-        while amount_yielded < count:
+        while get_all or amount_yielded < count:
             query = {
                 "count": count,
                 "id": self.user_id,
