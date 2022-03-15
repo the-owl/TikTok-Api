@@ -111,7 +111,8 @@ class User:
 
         return user_props["userInfo"]
 
-    def videos(self, count=30, cursor=0, **kwargs) -> Iterator[Video]:
+    def videos(self, count: int = 30, cursor: int = 0, 
+               get_all: bool = False, **kwargs) -> Iterator[Video]:
         """
         Returns an iterator yielding Video objects.
 
@@ -135,9 +136,9 @@ class User:
         first = True
         amount_yielded = 0
 
-        while amount_yielded < count:
+        while get_all or amount_yielded < count:
             query = {
-                "count": 30,
+                "count": count,
                 "id": self.user_id,
                 "cursor": cursor,
                 "type": 1,
