@@ -197,7 +197,7 @@ class User:
 
         while get_all or amount_yielded < count:
             query = {
-                "count": 30,
+                "count": count,
                 "id": self.user_id,
                 "type": 2,
                 "secUid": self.sec_uid,
