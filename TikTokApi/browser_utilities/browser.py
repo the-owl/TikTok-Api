@@ -37,6 +37,7 @@ class browser(BrowserInterface):
         self.language = kwargs.get("language", "en")
         self.executable_path = kwargs.get("executable_path", None)
         self.device_id = kwargs.get("custom_device_id", None)
+        self.user_agent = kwargs.get("user_agent")
 
         args = kwargs.get("browser_args", [])
         options = kwargs.get("browser_options", {})
@@ -124,6 +125,8 @@ class browser(BrowserInterface):
         iphone["has_touch"] = random.randint(1, 2) == 1
 
         iphone["bypass_csp"] = True
+        if self.user_agent:
+            iphone["user_agent"] = self.user_agent
 
         context = self.browser.new_context(**iphone)
         if set_useragent:
