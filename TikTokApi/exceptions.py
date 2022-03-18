@@ -36,3 +36,9 @@ class TikTokNotAvailableError(Exception):
     def __init__(self, message="The requested object is not available in this region"):
         self.message = message
         super().__init__(self.message)
+
+
+class NoDataError(Exception):
+    def __init__(self, message="Failed to extract any useful data from reply"):
+        self.message = message
+        super().__init__(self.message)
